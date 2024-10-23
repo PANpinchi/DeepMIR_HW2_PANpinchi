@@ -1,6 +1,6 @@
-numpy=1.18
-scipy=1.4
-scikit-learn=0.22
+numpy==1.18
+scipy==1.4
+scikit-learn==0.22
 tqdm
 libsndfile
 ffmpeg
