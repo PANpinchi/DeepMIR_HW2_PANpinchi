@@ -56,11 +56,25 @@ conda create -n deepmir_hw2 python=3.7
 # Activate the environment:
 conda activate deepmir_hw2
 
+# Install Open-Unmix
+pip install openunmix
+
 # Install PyTorch, TorchVision, and Torchaudio with CUDA 10.2
 conda install pytorch==1.9.0 torchvision==0.10.0 torchaudio==0.9.0 cudatoolkit=10.2 -c pytorch
 
+# Install additional dependencies from requirements.txt:
+pip install -r requirements.txt
+```
+or
+
+```bash
 # Install additional dependencies from environment-gpu-linux-cuda10.yml:
 conda env create -f open-unmix-pytorch/scripts/environment-gpu-linux-cuda10.yml
+
+# Activate the environment:
+conda activate deepmir_hw2
+
+pip install openunmix
 
 # Install additional dependencies from requirements.txt:
 pip install -r requirements.txt
