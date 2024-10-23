@@ -1,0 +1,83 @@
+conda create -n deepmir_hw2 python=3.7
+
+conda activate deepmir_hw2
+
+# CUDA 10.2
+conda install pytorch==1.9.0 torchvision==0.10.0 torchaudio==0.9.0 cudatoolkit=10.2 -c pytorch
+
+pip install -r requirements.txt
+
+
+
+
+
+conda env create -f scripts/environment-gpu-linux-cuda10.yml
+
+
+
+
+
+【Task 1: Train a source separation model 】
+
+CUDA_VISIBLE_DEVICES=1
+
+python scripts/train.py --root ../datasets/MUSDB18-HQ --target vocals --is_wav
+
+python train.py --root ../../datasets/MUSDB18-HQ --target vocals --nb-workers 24 --is_wav
+
+CUDA_VISIBLE_DEVICES=1 python train.py --root ../../datasets/MUSDB18 --target vocals --nb-workers 4
+
+
+
+CUDA_VISIBLE_DEVICES=1 nohup python -u train.py --quiet --root ../../datasets/MUSDB18-HQ --output data_augmentation --target vocals --nb-workers 24 --is_wav > outputs_data_augmentation.txt &
+
+CUDA_VISIBLE_DEVICES=1 nohup python -u train.py --quiet --remove_lstm --root ../../datasets/MUSDB18-HQ --output remove_lstm --target vocals --nb-workers 24 --is_wav > outputs_remove_lstm.txt &
+
+
+
+nohup python -u train.py --quiet --root ../../datasets/MUSDB18-HQ --target vocals --nb-workers 24 --is_wav > outputs.txt &
+
+nohup python -u train.py --quiet --root ../../datasets/MUSDB18-HQ --checkpoint open-unmix --target vocals --nb-workers 24 --is_wav > outputs_2.txt &
+
+
+[evaluate]
+
+===> open-unmix Epoch 25
+python my_openunmix/evaluate.py --root ../datasets/MUSDB18-HQ --target vocals --residual accompaniment --is-wav --model scripts/open-unmix_25 --outdir out_task1_25 --evaldir out_task1_25_eval
+
+===> open-unmix Epoch 50
+python my_openunmix/evaluate.py --root ../datasets/MUSDB18-HQ --target vocals --residual accompaniment --is-wav --model scripts/open-unmix_50 --outdir out_task1_50 --evaldir out_task1_50_eval
+
+===> open-unmix Epoch 150
+python my_openunmix/evaluate.py --root ../datasets/MUSDB18-HQ --target vocals --residual accompaniment --is-wav --model scripts/open-unmix_150 --outdir out_task1_150 --evaldir out_task1_150_eval
+
+===> open-unmix Epoch 571
+python my_openunmix/evaluate.py --root ../datasets/MUSDB18-HQ --target vocals --residual accompaniment --is-wav --model scripts/open-unmix --outdir out_task1 --evaldir out_task1_eval
+
+
+===> data_augmentation 150
+CUDA_VISIBLE_DEVICES=1 nohup python -u my_openunmix/evaluate.py --root ../datasets/MUSDB18-HQ --target vocals --residual accompaniment --is-wav --model scripts/data_augmentation_150 --outdir out_data_augmentation_150 --evaldir out_data_augmentation_150_eval > outputs_data_augmentation_150.txt &
+
+
+===> remove_lstm 150
+nohup python -u my_openunmix/evaluate.py --remove_lstm --root ../datasets/MUSDB18-HQ --target vocals --residual accompaniment --is-wav --model scripts/remove_lstm --outdir out_remove_lstm_150 --evaldir out_remove_lstm_eval > outputs_remove_lstm_150.txt &
+
+
+[evaluate use_griffinlim]
+nohup python -u my_openunmix/evaluate.py --root ../datasets/MUSDB18-HQ --target vocals --residual accompaniment --is-wav --use_griffinlim --model scripts/open-unmix --outdir out_task2 --evaldir out_task2_eval > outputs_use_griffinlim.txt &
+
+
+
+
+
+
+
+umx https://samples.ffmpeg.org/A-codecs/wavpcm/test-96.wav --audio-backend sox_io --target vocals --model scripts/open-unmix --outdir out_ours --niter 0
+
+
+umx "../datasets/MUSDB18-HQ/test/AM Contra - Heart Peripheral/mixture.wav" --audio-backend sox_io --target vocals --model scripts/open-unmix --outdir out_ours --niter 0
+
+
+
+
+
