@@ -60,7 +60,7 @@ conda activate deepmir_hw2
 conda install pytorch==1.9.0 torchvision==0.10.0 torchaudio==0.9.0 cudatoolkit=10.2 -c pytorch
 
 # Install additional dependencies from environment-gpu-linux-cuda10.yml:
-conda env create -f scripts/environment-gpu-linux-cuda10.yml
+conda env create -f open-unmix-pytorch/scripts/environment-gpu-linux-cuda10.yml
 
 # Install additional dependencies from requirements.txt:
 pip install -r requirements.txt
